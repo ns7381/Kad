@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Config
+clusters:
+- name: cluster77
+  cluster:
+    insecure-skip-tls-verify: true
+    server: https://10.110.22.77:6443
+users:
+- name: admin-77
+  user:
+    token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJpb3AiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlY3JldC5uYW1lIjoiZGVmYXVsdC10b2tlbi16aGh4cyIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiYTk0NWEzNDEtNWQ3Yy0xMWU4LWJmZTUtMDA1MDU2YWIyYjk4Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmlvcDpkZWZhdWx0In0.O8LuG2cZ4QC9u3fwAby2vpql9pc9P1We9bDT1_g1enXZATKm0elhTDx7f5AiyrQjc9UEz_Av4F-toUjru1xOix7KAJ6pnfLaRWmrPAmgvCCgJ9QP48gtz9b9Hcj95hvuB6FHgxbBlYPf22vTIDHnoo3bi-l2oqhsPAf9G5eO23V458BNYpML_ZgokXz0Jj7SD5Br0MzOv5El-EQH7ZrNl3UE5okenpP36tAA3mIk1BYmjW2RmgrP-9FHbkSibUHoIZ1fqwaTT320TVV6WZDOoNgl8NRRWus6EsNsW6y87AvwOeV41Cu8b-YoSiH3MOxcXEkdkMNZNDXCsWR4WmwV0A
+contexts:
+- context:
+    cluster: cluster77
+    user: admin-77
+  name: kube-cluster77
+current-context: kube-cluster77
