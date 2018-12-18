@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.15">
+    <keepDependencies>false</keepDependencies>
+    <properties>
+        <org.jenkinsci.plugins.workflow.job.properties.DisableConcurrentBuildsJobProperty/>
+        <com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty plugin="gitlab-plugin@1.4.8">
+            <gitLabConnection>gitlab</gitLabConnection>
+        </com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty>
+        <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+            <triggers>
+                <com.dabsquared.gitlabjenkins.GitLabPushTrigger plugin="gitlab-plugin@1.4.8">
+                    <triggerOnPush>true</triggerOnPush>
+                    <triggerOnMergeRequest>true</triggerOnMergeRequest>
+                    <triggerOnPipelineEvent>false</triggerOnPipelineEvent>
+                    <triggerOnAcceptedMergeRequest>true</triggerOnAcceptedMergeRequest>
+                    <triggerOnClosedMergeRequest>true</triggerOnClosedMergeRequest>
+                    <triggerOpenMergeRequestOnPush>false</triggerOpenMergeRequestOnPush>
+                    <triggerOnNoteRequest>true</triggerOnNoteRequest>
+                    <noteRegex>Jenkins please retry a build</noteRegex>
+                    <ciSkip>true</ciSkip>
+                    <skipWorkInProgressMergeRequest>true</skipWorkInProgressMergeRequest>
+                    <setBuildDescription>true</setBuildDescription>
+                    <branchFilterType>All</branchFilterType>
+                    <secretToken>4FaS2hmkMRvLcKZEpiBM</secretToken>
+                </com.dabsquared.gitlabjenkins.GitLabPushTrigger>
+            </triggers>
+        </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+    </properties>
+    <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.41">
+        <script>
+            pipeline {
+                agent any
+                stages {
+                    stage('build') {
+                        steps {
+            git branch: '{{.Branch}}', credentialsId: 'usernameIDcred', url: '{{.Repository}}'
+            sh '''{{.Build}}'''
+            sh'cp -r {{.PkgInclude}} /opt/ns/java8/';
+            sh'''
+            cd /opt/ns/java8;
+            docker build -t {{.Name}} .;
+            docker push {{.Name}};
+            '''
+                        }
+                    }
+                    stage('test') {
+                        steps {
+                            echo 'Test'
+                        }
+                    }
+                    stage('deploy') {
+                        steps {
+            sh'docker pull {{.Name}}';
+            sh'docker tag {{.Name}} {{.Name}}:test';
+            sh'docker push {{.Name}}:test';
+                        }
+                    }
+                }
+            }
+        </script>
+        <sandbox>true</sandbox>
+    </definition>
+    <triggers/>
+    <disabled>false</disabled>
+</flow-definition>
